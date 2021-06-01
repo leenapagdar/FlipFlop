@@ -13,7 +13,10 @@ public class Game {
 
 	private final int             level;
 	private final ArrayList<Card> cards;
-	private Card lastCard;
+	private       Card            lastCard;
+	private       int             seconds;
+	private       int             score;
+	private       int             flipCount;
 
 
 	public Game(int level) {
@@ -22,6 +25,10 @@ public class Game {
 		}
 		this.level = level;
 		this.cards = pickCards(level);
+		lastCard = null;
+		seconds = 0;
+		score = 0;
+		flipCount = 0;
 	}
 
 	private ArrayList<Card> pickCards(int level) {
@@ -44,6 +51,22 @@ public class Game {
 		return cards;
 	}
 
+	public int getSeconds() {
+		return seconds;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public int getFlipCount() {
+		return flipCount;
+	}
+
+	public int incrementSeconds() {
+		return seconds++;
+	}
+
 	@Override
 	public String toString() {
 		String string = "---------------\n" +
@@ -53,12 +76,10 @@ public class Game {
 	}
 
 	public void selectCard(Card selectedCard) {
-		assert selectedCard != null;
-
-		if(lastCard == null) {
+		if (lastCard == null) {
 			lastCard = selectedCard;
-			for(Card card : cards) {
-				if(!card.isMatched) {
+			for (Card card : cards) {
+				if (!card.isMatched) {
 					card.isFaceUp = false;
 				}
 			}
@@ -66,18 +87,36 @@ public class Game {
 			if (lastCard.equals(selectedCard)) {
 				selectedCard.isMatched = true;
 				lastCard.isMatched = true;
+				score += 10;
 			}
 			lastCard = null;
 		}
+		flipCount += 1;
 		selectedCard.flip();
 	}
 
-	private Card getCardById(String id) {
+	public void selectCard(String id) {
+		Card selectedCard = getCardFromId(id);
+		assert selectedCard != null;
+
+		selectCard(selectedCard);
+	}
+
+	public Card getCardFromId(String id) {
 		for (Card card : cards) {
 			if (card.id.equals(id)) {
 				return card;
 			}
 		}
 		return null;
+	}
+
+	public boolean isComplete() {
+		for (Card card : cards) {
+			if (!card.isMatched) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

@@ -2,6 +2,7 @@ out/
 .idea/
 *.iml
 .DS_Store
+game_data.json
 # Compiled class file
 *.class
 
