@@ -17,6 +17,7 @@ public class Game {
 	private       int             seconds;
 	private       int             score;
 	private       int             flipCount;
+	private       String          playerName;
 
 
 	public Game(int level) {
@@ -29,6 +30,12 @@ public class Game {
 		seconds = 0;
 		score = 0;
 		flipCount = 0;
+		this.playerName = "";
+	}
+
+	public Game(int level, String playerName) {
+		this(level);
+		this.playerName = playerName;
 	}
 
 	private ArrayList<Card> pickCards(int level) {
@@ -67,12 +74,8 @@ public class Game {
 		return seconds++;
 	}
 
-	@Override
-	public String toString() {
-		String string = "---------------\n" +
-				"Level: " + level + "\n" +
-				"Cards: " + cards.size() + "\n";
-		return string;
+	public String getPlayerName() {
+		return playerName;
 	}
 
 	public void selectCard(Card selectedCard) {

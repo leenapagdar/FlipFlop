@@ -1,11 +1,14 @@
 package com.csci143.project.FinalGame.ui;
 
 import com.csci143.project.FinalGame.model.Game;
+import com.csci143.project.FinalGame.model.utils.GameDataUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import static com.csci143.project.FinalGame.ui.MainPage.DEFAULT_PLAYER;
 
 public class LevelPage extends JPanel implements ActionListener {
 
@@ -17,12 +20,15 @@ public class LevelPage extends JPanel implements ActionListener {
 		Font font = getFont().deriveFont(20.0f);
 		setLayout(new GridLayout(3, 6, 5, 5));
 
+		int highestLevel = GameDataUtils.getHighestLevelForPlayer(DEFAULT_PLAYER);
+
 		for (int i = 0; i < Game.MAX_LEVEL; i++) {
 			JButton levelButton = new JButton();
 			levelButton.setText("Level: " + (i + 1));
 			levelButton.setFont(font);
 			levelButton.addActionListener(this);
 			levelButton.setName("" + (i + 1));
+			levelButton.setEnabled((i) <= highestLevel);
 			add(levelButton);
 		}
 	}
@@ -40,7 +46,7 @@ public class LevelPage extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		JButton sourceButton = (JButton) e.getSource();
 		int level = Integer.parseInt(sourceButton.getName());
-		JPanel gamePage = new GamePage(level);
+		JPanel gamePage = new GamePage(level, DEFAULT_PLAYER);
 		removeGamePageIfExists();
 
 		getParent().add(gamePage, MainPage.GAME_PAGE);

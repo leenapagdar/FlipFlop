@@ -2,6 +2,7 @@ package com.csci143.project.FinalGame.ui;
 
 import com.csci143.project.FinalGame.model.Card;
 import com.csci143.project.FinalGame.model.Game;
+import com.csci143.project.FinalGame.model.utils.GameDataUtils;
 import com.csci143.project.FinalGame.ui.utils.UIUtils;
 
 
@@ -35,8 +36,8 @@ public class GamePage extends JPanel implements ActionListener {
 	public GamePage() {
 	}
 
-	public GamePage(int level) {
-		game = new Game(level);
+	public GamePage(int level, String playerName) {
+		game = new Game(level, playerName);
 
 		initUserInterface();
 
@@ -148,9 +149,22 @@ public class GamePage extends JPanel implements ActionListener {
 			refreshLook(cardButton, game.getCardFromId(cardButton.getName()));
 		}
 		if (game.isComplete()) {
+			timer.stop();
+			GameDataUtils.saveScoreFor(game.getPlayerName(), game.getLevel(), game.getSeconds(), game.getScore(), game.getFlipCount());
+
+			// Navigate to levels page
+			removeLevelPageIfExists();
+			getParent().add(new LevelPage(), MainPage.LEVEL_PAGE);
 			CardLayout c = (CardLayout) getParent().getLayout();
 			c.show(getParent(), MainPage.LEVEL_PAGE);
+		}
+	}
 
+	private void removeLevelPageIfExists() {
+		for (Component component : getParent().getComponents()) {
+			if (component instanceof LevelPage) {
+				getParent().remove(component);
+			}
 		}
 	}
 
