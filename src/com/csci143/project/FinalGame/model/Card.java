@@ -8,6 +8,13 @@ public class Card {
 	boolean isMatched;
 	String  id;
 
+	public Card(String emoji, boolean isFaceUp, boolean isMatched) {
+		this.id = UUID.randomUUID().toString();
+		this.emoji = emoji;
+		this.isFaceUp = isFaceUp;
+		this.isMatched = isMatched;
+	}
+
 	public String getEmoji() {
 		return emoji;
 	}
@@ -40,15 +47,8 @@ public class Card {
 		this.id = id;
 	}
 
-	public Card(String emoji, boolean isFaceUp, boolean isMatched) {
-		this.id = UUID.randomUUID().toString();
-		this.emoji = emoji;
-		this.isFaceUp = isFaceUp;
-		this.isMatched = isMatched;
-	}
-
 	public void flip() {
-		if(isMatched) {
+		if (isMatched) {
 			isFaceUp = true;
 		} else {
 			isFaceUp = !isFaceUp;

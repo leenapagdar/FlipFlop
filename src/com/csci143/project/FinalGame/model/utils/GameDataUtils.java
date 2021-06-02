@@ -7,7 +7,8 @@ import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public final class GameDataUtils {
 	private static final String PATH_TO_DATA_FILE = "resources/gameData/game_data.json";
@@ -24,9 +25,9 @@ public final class GameDataUtils {
 			throw new IllegalStateException("Player does not exist in data file");
 		}
 		int maximumLevel = 0;
-		for(Object key: playerData.keySet()) {
+		for (Object key : playerData.keySet()) {
 			int level = Integer.parseInt((String) key);
-			if(level > maximumLevel) {
+			if (level > maximumLevel) {
 				maximumLevel = level;
 			}
 		}
@@ -44,6 +45,14 @@ public final class GameDataUtils {
 		}
 		JSONObject scoreData = (JSONObject) playerData.getOrDefault("" + level, null);
 		return (long) scoreData.getOrDefault("Score", 0);
+	}
+
+	public static long getHighScoreForIfExists(String playerName, int level) {
+		try {
+			return getHighScoreFor(playerName, level);
+		} catch (IllegalStateException e) {
+			return Integer.MIN_VALUE;
+		}
 	}
 
 	public static void addPlayer(String playerName) {

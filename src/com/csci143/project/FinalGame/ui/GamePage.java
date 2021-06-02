@@ -5,7 +5,6 @@ import com.csci143.project.FinalGame.model.Game;
 import com.csci143.project.FinalGame.model.utils.GameDataUtils;
 import com.csci143.project.FinalGame.ui.utils.UIUtils;
 
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -45,6 +44,10 @@ public class GamePage extends JPanel implements ActionListener {
 
 		setupTimer();
 		timer.start();
+	}
+
+	private static String convertToHumanTime(int seconds) {
+		return String.format("%02d:%02d", (seconds / 60), seconds % 60);
 	}
 
 	public void setupCards() {
@@ -126,10 +129,6 @@ public class GamePage extends JPanel implements ActionListener {
 		});
 	}
 
-	private static String convertToHumanTime(int seconds) {
-		return String.format("%02d:%02d", (seconds / 60), seconds % 60);
-	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (!(e.getSource() instanceof JButton)) {
@@ -150,11 +149,20 @@ public class GamePage extends JPanel implements ActionListener {
 		}
 		if (game.isComplete()) {
 			timer.stop();
-			GameDataUtils.saveScoreFor(game.getPlayerName(), game.getLevel(), game.getSeconds(), game.getScore(), game.getFlipCount());
+			String message = "Bravo!\n\nFor this level, your score is as following:\n" +
+					"Time: " + convertToHumanTime(game.getSeconds()) + "\n" +
+					"Score: " + game.getScore() + "\n" +
+					"FlipCount: " + game.getFlipCount() + "\n";
+			if (game.getScore() > GameDataUtils.getHighScoreForIfExists(game.getPlayerName(), game.getLevel())) {
+				message += "ITS A NEW HIGH SCORE!\n\n";
+				GameDataUtils.saveScoreFor(game.getPlayerName(), game.getLevel(), game.getSeconds(), game.getScore(), game.getFlipCount());
+			}
+
+			JOptionPane.showMessageDialog(this, message, "Summary", JOptionPane.INFORMATION_MESSAGE);
 
 			// Navigate to levels page
 			removeLevelPageIfExists();
-			getParent().add(new LevelPage(), MainPage.LEVEL_PAGE);
+			getParent().add(new LevelPage(game.getPlayerName()), MainPage.LEVEL_PAGE);
 			CardLayout c = (CardLayout) getParent().getLayout();
 			c.show(getParent(), MainPage.LEVEL_PAGE);
 		}

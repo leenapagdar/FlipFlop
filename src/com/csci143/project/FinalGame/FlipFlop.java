@@ -2,9 +2,7 @@ package com.csci143.project.FinalGame;
 
 import com.csci143.project.FinalGame.ui.MainPage;
 
-import javax.swing.*;
-
-public class FlipFlop extends JFrame {
+public class FlipFlop {
 
 	public static void main(String[] args) {
 		//Schedule a job for the event dispatch thread:
