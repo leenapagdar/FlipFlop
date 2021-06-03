@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inherit-compiler-output="true" jdk="corretto-1.8" jdk_type="JavaSDK">
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$">
+		<excludeFolder url="file://$MODULE_DIR$/out"/>
+	</contentEntry>
+	<levels>
+		<level name="IntelliJ IDEA GridLayout" value="project"/>
+		<level name="json-20140107" value="project"/>
+	</levels>
+</component>

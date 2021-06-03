@@ -1,12 +1,12 @@
 package com.csci143.project.FinalGame.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
+import java.util.*;
 
 public class Game {
-	public static final int      MAX_LEVEL      = 15;
-	public static final String[] ALLOWED_EMOJIS = {
+	public static final int      MAX_LEVEL       = 30;
+	public static final int      POSITIVE_POINTS = 10;
+	public static final int      NEGATIVE_POINTS = -5;
+	public static final String[] ALLOWED_EMOJIS  = {
 			"blowfish", "crab", "dolphin", "fish", "lobster", "octopus", "oyster", "seaOtter", "seal",
 			"shark", "shrimp", "spiralShell", "spoutingWhale", "squid", "tropicalFish", "whale"
 	};
@@ -16,6 +16,7 @@ public class Game {
 	private       Card            lastCard;
 	private       int             seconds;
 	private       int             score;
+	private       int             negativePoints = 0;
 	private       int             flipCount;
 	private       String          playerName;
 
@@ -26,6 +27,9 @@ public class Game {
 		}
 		this.level = level;
 		this.cards = pickCards(level);
+		if (level % 2 == 0) {
+			negativePoints = NEGATIVE_POINTS;
+		}
 		lastCard = null;
 		seconds = 0;
 		score = 0;
@@ -40,14 +44,22 @@ public class Game {
 
 	private ArrayList<Card> pickCards(int level) {
 		ArrayList<Card> cards = new ArrayList<>();
-		Random random = new Random();
-		for (int i = 0; i < level; i++) {
-			String emoji = ALLOWED_EMOJIS[random.nextInt(ALLOWED_EMOJIS.length)];
+		int totalEmojis = ((level % 2) == 0 ? level : level + 1) / 2;
+		for (String emoji : pickNRandomEmojisWithoutDuplicates(totalEmojis)) {
 			cards.add(new Card(emoji, false, false));
 			cards.add(new Card(emoji, false, false));
 		}
 		Collections.shuffle(cards);
 		return cards;
+	}
+
+	private Set<String> pickNRandomEmojisWithoutDuplicates(int numberOfEmojis) {
+		HashSet<String> emojis = new HashSet<>();
+		Random random = new Random();
+		while (emojis.size() != numberOfEmojis) {
+			emojis.add(ALLOWED_EMOJIS[random.nextInt(ALLOWED_EMOJIS.length)]);
+		}
+		return emojis;
 	}
 
 	public int getLevel() {
@@ -90,7 +102,9 @@ public class Game {
 			if (lastCard.equals(selectedCard)) {
 				selectedCard.isMatched = true;
 				lastCard.isMatched = true;
-				score += 10;
+				score += POSITIVE_POINTS;
+			} else {
+				score += negativePoints;
 			}
 			lastCard = null;
 		}

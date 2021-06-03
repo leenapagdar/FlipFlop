@@ -3,7 +3,6 @@ package com.csci143.project.FinalGame.ui;
 import com.csci143.project.FinalGame.model.Card;
 import com.csci143.project.FinalGame.model.Game;
 import com.csci143.project.FinalGame.model.utils.GameDataUtils;
-import com.csci143.project.FinalGame.ui.utils.UIUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -85,20 +84,14 @@ public class GamePage extends JPanel implements ActionListener {
 		game = new Game(level);
 	}
 
-	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-	}
-
 	private void initUserInterface() {
 		setName("GamePage");
 
-		UIUtils.makeComponentTransparent(this);
 		setLayout(new BorderLayout());
-		menuPanel = UIUtils.getTransparentPanel();
+		menuPanel = new JPanel();
 		menuPanel.setName("MenuPanel");
-		cardsPanel = UIUtils.getTransparentPanel();
-		cardsPanel.setName("CardPanel");
+		cardsPanel = new JPanel();
+		cardsPanel.setName("CardsPanel");
 
 		// Desired font
 		Font resizedFont = getFont().deriveFont(20.0f);
@@ -155,7 +148,9 @@ public class GamePage extends JPanel implements ActionListener {
 					"FlipCount: " + game.getFlipCount() + "\n";
 			if (game.getScore() > GameDataUtils.getHighScoreForIfExists(game.getPlayerName(), game.getLevel())) {
 				message += "ITS A NEW HIGH SCORE!\n\n";
-				GameDataUtils.saveScoreFor(game.getPlayerName(), game.getLevel(), game.getSeconds(), game.getScore(), game.getFlipCount());
+				GameDataUtils.saveScoreFor(
+						game.getPlayerName(), game.getLevel(), game.getSeconds(), game.getScore(), game.getFlipCount()
+				);
 			}
 
 			JOptionPane.showMessageDialog(this, message, "Summary", JOptionPane.INFORMATION_MESSAGE);
