@@ -37,16 +37,18 @@ public class NavigationWorker extends SwingWorker<Void, Void> {
 	 * Display loading animation and load the destination page on a background thread.
 	 */
 	public void navigate() {
-
 		// remove all components on screen
 		parentPanel.removeAll();
+		parentPanel.setLayout(new BorderLayout());
 
 		// create a label with animation as icon
 		Icon imgIcon = new ImageIcon(LOADING_ANIMATION_GIF);
 		JLabel label = new JLabel(imgIcon);
+		label.setVerticalAlignment(SwingConstants.CENTER);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
 
 		// add the label to parent panel and refresh the look.
-		parentPanel.add(label);
+		parentPanel.add(label, BorderLayout.CENTER);
 		parentPanel.validate();
 		parentPanel.repaint();
 

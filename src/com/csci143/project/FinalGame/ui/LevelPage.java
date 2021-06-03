@@ -24,7 +24,7 @@ public class LevelPage extends JPanel implements ActionListener {
 	private static final int CARD_BUTTON_HEIGHT = 100;
 
 	// Path format for levels image
-	private static final String PATH_TO_LEVELS_IMAGE = "resources/Levels/%d.png";
+	private static final String PATH_TO_LEVELS_IMAGE = "resources/levels/%d.png";
 
 	private final String playerName;
 	private JPanel levelsPanel;

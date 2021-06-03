@@ -30,8 +30,29 @@ public class UserPage extends JPanel implements ActionListener {
 	private void initComponents() {
 		// set defaults
 		setSize(PAGE_WIDTH, PAGE_HEIGHT);
-		setLayout(new BorderLayout());
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		Font font = getFont().deriveFont(20.0f);
+
+		// Welcome panel
+		JPanel welcomePanel = new JPanel();
+		welcomePanel.setLayout(new BorderLayout());
+		JLabel flipFlopLabel = new JLabel();
+		flipFlopLabel.setIcon(new ImageIcon("resources/flipFlop.png"));
+		flipFlopLabel.setPreferredSize(new Dimension(600, 400));
+		flipFlopLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		flipFlopLabel.setVerticalAlignment(SwingConstants.CENTER);
+		flipFlopLabel.setVisible(true);
+		welcomePanel.add(flipFlopLabel, BorderLayout.NORTH);
+		JTextArea instructionsText = new JTextArea(" Instructions:\n" +
+				"  * Select/Add your name.\n" +
+				"  * Select a level to play. Every even numbered level will have negative points for unsuccessful match.\n" +
+				"  * Beat you previous score by replaying a level.\n" +
+				"  * MOST IMPORTANTLY, Have fun while uncovering sea creatures.\n"
+		);
+		instructionsText.setRows(5);
+		instructionsText.setEditable(false);
+		instructionsText.setLineWrap(true);
+		welcomePanel.add(instructionsText, BorderLayout.SOUTH);
 
 		// Panel to house the user name fields
 		JPanel mainPanel = new JPanel();
@@ -55,7 +76,13 @@ public class UserPage extends JPanel implements ActionListener {
 		mainPanel.add(userList);
 		mainPanel.add(nextPage);
 
-		add(mainPanel, BorderLayout.CENTER);
+		add(Box.createVerticalGlue());
+		add(welcomePanel);
+		add(Box.createVerticalStrut(100));
+		add(Box.createVerticalGlue());
+		add(mainPanel);
+		add(Box.createVerticalStrut(100));
+		add(Box.createVerticalGlue());
 	}
 
 	/**
