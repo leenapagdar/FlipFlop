@@ -1,6 +1,6 @@
 package com.csci143.project.FinalGame;
 
-import com.csci143.project.FinalGame.ui.MainPage;
+import com.csci143.project.FinalGame.ui.RootPage;
 
 public class FlipFlop {
 
@@ -9,8 +9,8 @@ public class FlipFlop {
 		//creating and showing this application's GUI.
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				MainPage mainPage = new MainPage();
-				mainPage.setVisible(true);
+				RootPage rootPage = new RootPage();
+				rootPage.setVisible(true);
 			}
 		});
 	}

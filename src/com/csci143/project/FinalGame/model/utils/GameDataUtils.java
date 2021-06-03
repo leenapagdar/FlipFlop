@@ -10,14 +10,41 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Utils functions to read and write from Game data file. The data file uses json to store the data.
+ * Format:
+ *  {
+ *      "<Player>": {
+ *      	"<Level>": {
+ *      		{
+ *       			"Score": long,
+ *       			"FlipCount": long,
+ *       			"TimeInSec": long
+ *     			}
+ *      	}
+ *      }
+ *  }
+ */
 public final class GameDataUtils {
+
+	// Game data file location
 	private static final String PATH_TO_DATA_FILE = "resources/gameData/game_data.json";
 
+	/**
+	 * Gets all the players that have played the game before
+	 * @return List of player names
+	 */
 	public static ArrayList<String> getAllPlayers() {
 		JSONObject root = getJSONData();
 		return new ArrayList<>(root.keySet());
 	}
 
+	/**
+	 * Gets the highest level played by the specified player
+	 * @param playerName name of the player
+	 * @return Highest level played by the player
+	 * @throws IllegalStateException In case the player is a new player and/or they don't exist in the database.
+	 */
 	public static int getHighestLevelForPlayer(String playerName) {
 		JSONObject root = getJSONData();
 		JSONObject playerData = (JSONObject) root.getOrDefault(playerName, null);
@@ -34,20 +61,31 @@ public final class GameDataUtils {
 		return maximumLevel;
 	}
 
+	/**
+	 * Gets the highest score for given player in the given level.
+	 * @param playerName name of the desired player
+	 * @param level level at which we need to score.
+	 * @return score of the player at given level
+	 * @throws IllegalStateException in case the player either doesn't exist or has not played the given level.
+	 */
 	public static long getHighScoreFor(String playerName, int level) {
 		if (level > getHighestLevelForPlayer(playerName)) {
 			throw new IllegalStateException(playerName + " has not played level " + level);
 		}
 		JSONObject root = getJSONData();
 		JSONObject playerData = (JSONObject) root.getOrDefault(playerName, null);
-		if (playerData == null) {
-			throw new IllegalStateException("Player does not exist in data file");
-		}
 		JSONObject scoreData = (JSONObject) playerData.getOrDefault("" + level, null);
 		return (long) scoreData.getOrDefault("Score", 0);
 	}
 
-	public static long getHighScoreForIfExists(String playerName, int level) {
+	/**
+	 * Gets the high score for a player at a level, if it exists. This function just adds a wrapper of safety around the
+	 * getHighScoreFor function.
+	 * @param playerName name of the desired player
+	 * @param level level at which we need to score.
+	 * @return score of the player at given level, if it exists.
+	 */
+	public static long getHighScoreForLevelIfExists(String playerName, int level) {
 		try {
 			return getHighScoreFor(playerName, level);
 		} catch (IllegalStateException e) {
@@ -55,6 +93,10 @@ public final class GameDataUtils {
 		}
 	}
 
+	/**
+	 * Adds a new player in the database.
+	 * @param playerName Name of the player being added.
+	 */
 	public static void addPlayer(String playerName) {
 		JSONObject root = getJSONData();
 		root.put(playerName, new JSONObject());
@@ -67,6 +109,14 @@ public final class GameDataUtils {
 		}
 	}
 
+	/**
+	 * Saves the given score and stats for a given player.
+	 * @param playerName name of the player for which the score is being saved.
+	 * @param level level at which the game was played.
+	 * @param seconds seconds it took to finish the game.
+	 * @param score score of the player at finish line.
+	 * @param flipCount number of flips it took for the player to match all cards.
+	 */
 	public static void saveScoreFor(String playerName, int level, long seconds, long score, long flipCount) {
 		JSONObject root = getJSONData();
 		JSONObject playerData = (JSONObject) root.getOrDefault(playerName, null);
@@ -87,6 +137,10 @@ public final class GameDataUtils {
 		}
 	}
 
+	/**
+	 * Helper function to parse the root data of the JSON file.
+	 * @return the root JSONObject of parsed JSON file.
+	 */
 	private static JSONObject getJSONData() {
 		JSONParser jsonParser = new JSONParser();
 		FileReader reader;

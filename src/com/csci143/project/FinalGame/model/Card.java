@@ -2,11 +2,14 @@ package com.csci143.project.FinalGame.model;
 
 import java.util.UUID;
 
+/**
+ * Model class for a Card
+ */
 public class Card {
-	String  emoji;
-	boolean isFaceUp;
-	boolean isMatched;
-	String  id;
+	private String  emoji;
+	private boolean isFaceUp;
+	private boolean isMatched;
+	private String  id;
 
 	public Card(String emoji, boolean isFaceUp, boolean isMatched) {
 		this.id = UUID.randomUUID().toString();
@@ -15,12 +18,9 @@ public class Card {
 		this.isMatched = isMatched;
 	}
 
+	// Getters and Setters
 	public String getEmoji() {
 		return emoji;
-	}
-
-	public void setEmoji(String emoji) {
-		this.emoji = emoji;
 	}
 
 	public boolean isFaceUp() {
@@ -43,10 +43,9 @@ public class Card {
 		return id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
+	/**
+	 * Flips the card to its opposite side. Updates the card to always face up in case its matched.
+	 */
 	public void flip() {
 		if (isMatched) {
 			isFaceUp = true;
@@ -55,14 +54,20 @@ public class Card {
 		}
 	}
 
-	public boolean equals(Object o) {
-		if (o == this) {
+	/**
+	 * Matches this card with other card.
+	 * @param otherCard Other card which needs to be matched with this card.
+	 * @return True if the card matches, else false
+	 */
+	public boolean equals(Object otherCard) {
+		if (otherCard == this) {
 			return true;
 		}
-		if (!(o instanceof Card)) {
+		if (!(otherCard instanceof Card)) {
 			return false;
 		}
-		Card c = (Card) o;
+		Card c = (Card) otherCard;
+		// consider the cards as equal if their emojis match.
 		return emoji.equals(c.emoji);
 	}
 

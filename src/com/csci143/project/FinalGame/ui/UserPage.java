@@ -1,17 +1,22 @@
 package com.csci143.project.FinalGame.ui;
 
 import com.csci143.project.FinalGame.model.utils.GameDataUtils;
+import com.csci143.project.FinalGame.ui.utils.NavigationWorker;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static com.csci143.project.FinalGame.ui.MainPage.*;
+import static com.csci143.project.FinalGame.ui.RootPage.*;
 
+/**
+ * User page to gather the player's information.
+ */
 public class UserPage extends JPanel implements ActionListener {
 	private static final String ADD_USER_ITEM = "<Add User>";
 
+	// UI elements
 	JComboBox<String> userList;
 
 	public UserPage() {
@@ -19,10 +24,13 @@ public class UserPage extends JPanel implements ActionListener {
 		initComponents();
 	}
 
+	/**
+	 * Helper function to load all the UI components for this page.
+	 */
 	private void initComponents() {
+		// set defaults
 		setSize(PAGE_WIDTH, PAGE_HEIGHT);
 		setLayout(new BorderLayout());
-
 		Font font = getFont().deriveFont(20.0f);
 
 		// Panel to house the user name fields
@@ -50,6 +58,13 @@ public class UserPage extends JPanel implements ActionListener {
 		add(mainPanel, BorderLayout.CENTER);
 	}
 
+	/**
+	 * Helper function to add a new user in the game database. In case this was called from "Let's flip" button, skip
+	 * updating Combo Box as it will trigger its action listener.
+	 *
+	 * @param e action event which caused this action.
+	 * @return name of the user which was added.
+	 */
 	private String addNewUser(ActionEvent e) {
 		String name = "";
 		while (name.isEmpty()) {
@@ -67,6 +82,11 @@ public class UserPage extends JPanel implements ActionListener {
 		return name;
 	}
 
+	/**
+	 * Action listener for the "Let's flip" button which triggers navigation to the levels page.
+	 *
+	 * @param e action event which caused this function being called.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (!(e.getSource() instanceof JButton)) {
@@ -80,19 +100,8 @@ public class UserPage extends JPanel implements ActionListener {
 			name = (String) userList.getSelectedItem();
 		}
 
-		// Navigate to levels pages
-		removeLevelPageIfExists();
-		JPanel levelPage = new LevelPage(name);
-		getParent().add(levelPage, LEVEL_PAGE);
-		CardLayout c = (CardLayout) getParent().getLayout();
-		c.show(getParent(), LEVEL_PAGE);
-	}
-
-	private void removeLevelPageIfExists() {
-		for (Component component : getParent().getComponents()) {
-			if (component instanceof LevelPage) {
-				getParent().remove(component);
-			}
-		}
+		// Navigate to level page
+		NavigationWorker levelPageLoader = new NavigationWorker(this, LEVEL_PAGE, name);
+		levelPageLoader.navigate();
 	}
 }
